@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:shop_app/providers/auth.dart';
 import 'package:shop_app/screens/orders_screen.dart';
 import 'package:shop_app/screens/product_overview_screen.dart';
+import 'package:shop_app/screens/user_products_screen.dart';
 
 class AppDrawer extends StatelessWidget {
   final _buttonStyle = ButtonStyle(
@@ -76,13 +77,13 @@ class AppDrawer extends StatelessWidget {
               TextButton(
                 child: Row(
                   children: [
-                    Icon(Icons.settings,
+                    Icon(Icons.drafts,
                         size: 45, color: Theme.of(context).accentColor),
                     SizedBox(width: 30),
-                    Text("Settings"),
+                    Text("My Products"),
                   ],
                 ),
-                onPressed: () {},
+                onPressed: ()=> Navigator.of(context).pushNamed(UserProductsScreen.nav),
                 style: _buttonStyle,
               ),
               Spacer(),
