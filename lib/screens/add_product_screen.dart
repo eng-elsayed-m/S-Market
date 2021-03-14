@@ -2,99 +2,78 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/providers/product.dart';
 import 'package:shop_app/providers/products.dart';
-import 'package:shop_app/screens/product_detail_screen.dart';
 
-class EditProductScreen extends StatefulWidget {
-  static const nav = "/edit-product";
+class AddProductScreen extends StatefulWidget {
+  static const nav = "/add-product";
 
   @override
-  _EditProductScreenState createState() => _EditProductScreenState();
+  _AddProductScreenState createState() => _AddProductScreenState();
 }
 
-class _EditProductScreenState extends State<EditProductScreen> {
+class _AddProductScreenState extends State<AddProductScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey();
+
   final _priceNode = FocusNode();
   final _descriptionNode = FocusNode();
-  final _imageUrlFocusNode = FocusNode();
   final _imageUrlController = TextEditingController();
+  final _imageUrlFocusNode = FocusNode();
   final _inputDec = InputDecoration(
     labelStyle: TextStyle(color: Color(0xFFfb743e), fontSize: 30),
-    
   );
   String _title = "";
   String _description = "";
-  String _price = "";
+  double _price = 0.0;
+
   @override
   void initState() {
     super.initState();
     _imageUrlFocusNode.addListener(_updatePreview);
   }
 
-  void _updatePreview() {
-    if (!_imageUrlFocusNode.hasFocus) {
-      if (validateImage(_imageUrlController.text)) {
-        setState(() {});
-      }
-    }
-  }
-
-  bool validateImage(String text) {
-    if (text.isEmpty) {
-      return false;
-    }
-    if (!text.startsWith("http") && !text.startsWith("https") ||
-        !text.endsWith(".jpg") &&
-            !text.endsWith(".jpeg") &&
-            !text.endsWith(".png")) {
-      return false;
-    }
-    return true;
-  }
-
   @override
   void dispose() {
-    super.dispose();
     _imageUrlFocusNode.removeListener(_updatePreview);
     _priceNode.dispose();
     _descriptionNode.dispose();
-    _imageUrlFocusNode.dispose();
     _imageUrlController.dispose();
+    _imageUrlFocusNode.dispose();
+    super.dispose();
+  }
+
+  void _updatePreview() {
+    if (!_imageUrlFocusNode.hasFocus) {
+      setState(() {});
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final id = ModalRoute.of(context).settings.arguments;
-    final product = Provider.of<Products>(context).searchItem(id);
     return Scaffold(
         backgroundColor: Theme.of(context).primaryColor,
         appBar: AppBar(
-          title: Text("Edit Prouct"),
+          title: Text("Add Product"),
           elevation: 0,
           actions: [
             IconButton(
                 icon: Icon(Icons.done_outline_outlined),
                 onPressed: () {
-                  _formKey.currentState.save();
                   if (!_formKey.currentState.validate()) {
                     return;
                   }
-                  Provider.of<Products>(context, listen: false).editProduct(
-                    id,
+                  _formKey.currentState.save();
+                  Provider.of<Products>(context, listen: false).addProduct(
                       Product(
-                          id: id,
-                          price: double.parse(_price),
-                          description: _description,
+                          id: null,
+                          imageUrl: _imageUrlController.text,
                           title: _title,
-                          imageUrl: validateImage(_imageUrlController.text)
-                              ? _imageUrlController.text
-                              : product.imageUrl));
-                  Navigator.of(context)
-                      .popAndPushNamed(ProductDetailScreen.nav, arguments: id);
+                          description: _description,
+                          price: _price));
+                  Navigator.of(context).pop();
                 }),
           ],
         ),
         body: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 10.0),
+          padding: const EdgeInsets.all(8.0),
           child: Form(
             key: _formKey,
             child: ListView(
@@ -103,8 +82,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   decoration: _inputDec.copyWith(
                     labelText: "Title ",
                   ),
-                  style: TextStyle(color: Colors.white,fontSize: 20),
-                  initialValue: product.title,
+                  style: TextStyle(color: Colors.white, fontSize: 20),
                   textInputAction: TextInputAction.next,
                   onFieldSubmitted: (_) =>
                       FocusScope.of(context).requestFocus(_priceNode),
@@ -122,15 +100,14 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   decoration: _inputDec.copyWith(
                     labelText: "Price ",
                   ),
-                  style: TextStyle(color: Colors.white,fontSize: 20),
-                  initialValue: product.price.toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 20),
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.number,
                   focusNode: _priceNode,
                   onFieldSubmitted: (_) =>
                       FocusScope.of(context).requestFocus(_descriptionNode),
                   onSaved: (val) {
-                    _price = val;
+                    _price = double.parse(val);
                   },
                   validator: (text) {
                     if (text.isEmpty) {
@@ -146,26 +123,27 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   },
                 ),
                 TextFormField(
-                  decoration: _inputDec.copyWith(
-                    labelText: "Description ",
-                  ),
-                  style: TextStyle(color: Colors.white,fontSize: 20),
-                  initialValue: product.description,
-                  keyboardType: TextInputType.multiline,
-                  focusNode: _descriptionNode,
-                  onSaved: (val) {
-                    _description = val;
-                  },
-                  validator: (text) {
-                    if (text.isEmpty) {
-                      return "Description is empty";
-                    }
-                    if (text.length < 10) {
-                      return "can't be less than 10 character";
-                    }
-                    return null;
-                  },
-                  maxLines: 3,
+                    decoration: _inputDec.copyWith(
+                      labelText: "Description ",
+                    ),
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                    keyboardType: TextInputType.multiline,
+                    focusNode: _descriptionNode,
+                    onSaved: (val) {
+                      _description = val;
+                    },
+                    validator: (text) {
+                      if (text.isEmpty) {
+                        return "Description is empty";
+                      }
+                      if (text.length < 10) {
+                        return "can't be less than 10 character";
+                      }
+                      return null;
+                    },
+                    maxLines: 3),
+                SizedBox(
+                  height: 10,
                 ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -173,32 +151,46 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     Container(
                       width: 100,
                       height: 100,
-                      margin: EdgeInsets.only(top: 10, right: 10),
                       decoration: BoxDecoration(
                           border: Border.all(
                               color: Colors.red,
                               width: 1,
                               style: BorderStyle.solid)),
-                      child: FittedBox(
-                          child: Image.network(
-                            _imageUrlController.text.isEmpty
-                                ? product.imageUrl
-                                : _imageUrlController.text,
-                          )),
+                      child: _imageUrlController.text.isEmpty
+                          ? Text("Add image Url")
+                          : FittedBox(
+                              child: Image.network(
+                              _imageUrlController.text,
+                              fit: BoxFit.contain,
+                            )),
                     ),
                     Expanded(
                       child: TextFormField(
-                        decoration: InputDecoration(hintText: "Image url",
-                          labelText: "if empty or invalid image won't change ",
-                          labelStyle: TextStyle(fontSize: 12,color: Colors.white)),
-                        style: TextStyle(color: Colors.white,fontSize: 23),
+                        decoration: InputDecoration(
+                            labelText: "Image url",
+                            labelStyle:
+                                TextStyle(fontSize: 12, color: Colors.white)),
+                        style: TextStyle(color: Colors.white, fontSize: 23),
                         keyboardType: TextInputType.url,
-                        focusNode: _imageUrlFocusNode,
                         controller: _imageUrlController,
+                        focusNode: _imageUrlFocusNode,
+                        validator: (text) {
+                          if (text.isEmpty) {
+                            return "Enter image url";
+                          }
+                          if (!text.startsWith("http") &&
+                                  !text.startsWith("https") ||
+                              !text.endsWith(".jpg") &&
+                                  !text.endsWith(".jpeg") &&
+                                  !text.endsWith(".png")) {
+                            return "enter a valid image url";
+                          }
+                          return null;
+                        },
                       ),
                     ),
                   ],
-                ),
+                )
               ],
             ),
           ),

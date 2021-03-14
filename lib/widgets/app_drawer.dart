@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/providers/auth.dart';
 import 'package:shop_app/screens/orders_screen.dart';
-import 'package:shop_app/screens/product_overview_screen.dart';
 import 'package:shop_app/screens/user_products_screen.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -51,19 +50,6 @@ class AppDrawer extends StatelessWidget {
               TextButton(
                 child: Row(
                   children: [
-                    Icon(Icons.home,
-                        size: 45, color: Theme.of(context).accentColor),
-                    SizedBox(width: 30),
-                    Text("Home"),
-                  ],
-                ),
-                onPressed: () =>
-                    Navigator.of(context).popAndPushNamed(ProductOverviewScreen.nav),
-                style: _buttonStyle,
-              ),
-              TextButton(
-                child: Row(
-                  children: [
                     Icon(Icons.payments,
                         size: 45, color: Theme.of(context).accentColor),
                     SizedBox(width: 30),
@@ -83,7 +69,8 @@ class AppDrawer extends StatelessWidget {
                     Text("My Products"),
                   ],
                 ),
-                onPressed: ()=> Navigator.of(context).pushNamed(UserProductsScreen.nav),
+                onPressed: () =>
+                    Navigator.of(context).pushNamed(UserProductsScreen.nav),
                 style: _buttonStyle,
               ),
               Spacer(),
@@ -95,7 +82,7 @@ class AppDrawer extends StatelessWidget {
                     color: Theme.of(context).accentColor,
                   ),
                   onPressed: () {
-                    Provider.of<Auth>(context,listen: false).logout();
+                    Provider.of<Auth>(context, listen: false).logout();
                   },
                 ),
               ),

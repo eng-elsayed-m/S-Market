@@ -12,7 +12,7 @@ class OrderScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
       appBar: 
-      AppBar(),
+      AppBar(title: Text("My orders")),
       body: SafeArea(
         child: ordersData.isEmpty ? Center(child: Text("No Orders"),):
         ListView.builder(

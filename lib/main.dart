@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/screens/add_product_screen.dart';
 import 'providers/orders.dart';
 import 'providers/products.dart';
 import 'providers/cart.dart';
@@ -46,17 +47,16 @@ class Store extends StatelessWidget {
               visualDensity: VisualDensity.adaptivePlatformDensity,
               textTheme: TextTheme(
                 headline1: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontFamily: "Anton",
-                    letterSpacing: 7,
-                    fontSize: 50,
-                    color: Color(0xFF383e56),
-                  ),
-                headline2: TextStyle(
-                  fontWeight: FontWeight.w900,
-                  color: Color(0xFFfb743e),
-                  fontSize: 40
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "Anton",
+                  letterSpacing: 7,
+                  fontSize: 50,
+                  color: Color(0xFF383e56),
                 ),
+                headline2: TextStyle(
+                    fontWeight: FontWeight.w900,
+                    color: Color(0xFFfb743e),
+                    fontSize: 40),
                 headline3: TextStyle(
                   fontWeight: FontWeight.w900,
                   fontSize: 20,
@@ -83,6 +83,7 @@ class Store extends StatelessWidget {
                           : AuthScreen()),
           routes: {
             ProductDetailScreen.nav: (ctx) => ProductDetailScreen(),
+            AddProductScreen.nav: (ctx) => AddProductScreen(),
             OrderScreen.nav: (ctx) => OrderScreen(),
             CartScreen.nav: (ctx) => CartScreen(),
             UserProductsScreen.nav: (ctx) => UserProductsScreen(),

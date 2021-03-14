@@ -22,8 +22,6 @@ class _AuthFormState extends State<AuthForm>
   bool _loading = false;
   final _inputDec = InputDecoration(
     labelStyle: TextStyle(color: Colors.white,fontSize: 18),
-    
-    
   );
 
   @override
