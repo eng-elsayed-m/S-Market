@@ -10,11 +10,10 @@ class ProductsGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     final productsData = Provider.of<Products>(context);
     final products = filter ?productsData.favoriteItems: productsData.items;
-
     return GridView.builder(
         padding: EdgeInsets.all(10),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            childAspectRatio: 6/5,
+            childAspectRatio: 2.6/3,
             crossAxisCount: 2,
             crossAxisSpacing: 10,
             mainAxisSpacing: 10),

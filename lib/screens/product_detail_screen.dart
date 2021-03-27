@@ -19,58 +19,57 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
       appBar: AppBar(
-        title: Text(product.title),
+        title: Text(product.title,style: Theme.of(context).textTheme.headline2,),
         centerTitle: true,
       ),
       body: Column(
         children: [
-          Expanded(
-            child: Container(
-              height: MediaQuery.of(context).size.height * 0.8,
-              child: ClipRRect(
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(15),
-                    bottomRight: Radius.circular(15)),
-                child: GridTile(
-                  child: Image.network(
-                    product.imageUrl,
-                    fit: BoxFit.contain,
-                  ),
-                  footer: GridTileBar(
-                      backgroundColor: Colors.white60,
-                      leading: Text(
-                               "Price :\$" + product.price.toString(),
-                               style: Theme.of(context).textTheme.headline3,
-                             ),
-                      title: Text(
-                        product.isFavorite ? "Favorite Item" : "",
-                        style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w900,
-                            color: Colors.red[900]),
-                      ),
-                      trailing: InkWell(
-                        child: Icon(
-                          Icons.shopping_basket,
-                          color: Theme.of(context).accentColor,
-                          size: 30,
-                        ),
-                        onTap: () {
-                          cart.addItem(product.id, product.title, product.price);
-                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      backgroundColor: Theme.of(context).primaryColor,
-                        content: Text("Added to your Card !!"),
-                        duration: Duration(seconds: 2),
-                        action: SnackBarAction(
-                          label: "UNDO",
-                          onPressed: () {
-                            cart.removeSingle(product.id);
-                          },
-                        )));
-                        },
-                      )),
+          Container(
+            height: MediaQuery.of(context).size.height * 0.6,
+            child: ClipRRect(
+              borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(15),
+                  bottomRight: Radius.circular(15)),
+              child: GridTile(
+                child: Image.network(
+                  product.imageUrl,
+                  fit: BoxFit.contain,
                 ),
+                footer: GridTileBar(
+                    backgroundColor: Colors.white,
+                    leading: Text(
+                             "Price :\$" + product.price.toString(),
+                             style: Theme.of(context).textTheme.headline4,
+                           ),
+                    title: Text(
+                      product.isFavorite ? "Favorite Item" : "",
+                      style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w900,
+                          color: Colors.red[900]),
+                    ),
+                    trailing: InkWell(
+                      child: Icon(
+                        Icons.shopping_basket,
+                        color: Theme.of(context).accentColor,
+                        size: 30,
+                      ),
+                      onTap: () {
+                        cart.addItem(product.id, product.title, product.price);
+                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Theme.of(context).accentColor,
+                      content: Text("Added to your Card !!",style: TextStyle(fontSize: 18),),
+                      duration: Duration(seconds: 2),
+                      action: SnackBarAction(
+                        label: "UNDO",
+                        textColor: Colors.white,
+                        onPressed: () {
+                          cart.removeSingle(product.id);
+                        },
+                      )));
+                      },
+                    )),
               ),
             ),
           ),
@@ -78,9 +77,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             flex:1,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 30),
-              child: Text(
-                product.description,
-                style: Theme.of(context).textTheme.headline4,
+              child: Center(
+                child: Text(
+                  product.description,
+                  style: Theme.of(context).textTheme.headline4,
+                ),
               ),
             ),
           ),

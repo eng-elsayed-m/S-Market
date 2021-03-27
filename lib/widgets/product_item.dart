@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/providers/auth.dart';
 import 'package:shop_app/providers/cart.dart';
 import '../providers/product.dart';
 import '../screens/product_detail_screen.dart';
@@ -9,6 +10,8 @@ class ProductItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context);
     final cart = Provider.of<Cart>(context, listen: false);
+    final userId = Provider.of<Auth>(context,listen: false).userId;
+    final token = Provider.of<Auth>(context,listen: false).token;
     return InkWell(
       onTap: () => Navigator.of(context)
           .pushNamed(ProductDetailScreen.nav, arguments: product.id),
@@ -23,7 +26,7 @@ class ProductItem extends StatelessWidget {
               backgroundColor: Colors.white60,
               title: Text(
                 product.title,
-                style: Theme.of(context).textTheme.headline3,
+                style: Theme.of(context).textTheme.headline4,
                 textAlign: TextAlign.center,
               ),
               leading: InkWell(
@@ -35,7 +38,7 @@ class ProductItem extends StatelessWidget {
                   size: 30,
                 ),
                 onTap: () {
-                  product.toggleFav();
+                  product.toggleFav(userId,token);
                   ScaffoldMessenger.of(context).hideCurrentSnackBar();
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: Text("Added to your favorite !!"),
@@ -53,11 +56,13 @@ class ProductItem extends StatelessWidget {
                   cart.addItem(product.id, product.title, product.price);
                   ScaffoldMessenger.of(context).hideCurrentSnackBar();
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    backgroundColor: Theme.of(context).primaryColor,
-                      content: Text("Added to your Card !!"),
+                      backgroundColor: Theme.of(context).accentColor,
+                      content: Text("Added to your Card !!",
+                          style: TextStyle(fontSize: 18)),
                       duration: Duration(seconds: 2),
                       action: SnackBarAction(
                         label: "UNDO",
+                        textColor: Colors.white,
                         onPressed: () {
                           cart.removeSingle(product.id);
                         },

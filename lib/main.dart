@@ -42,8 +42,8 @@ class Store extends StatelessWidget {
           title: 'ShopApp',
           theme: ThemeData(
               fontFamily: "Lato ",
-              primaryColor: Color(0xFF383e56),
-              accentColor: Color(0xFFfb743e),
+              primaryColor: Color(0xFFdddddd)  ,
+              accentColor: Color(0xFFf05454),
               visualDensity: VisualDensity.adaptivePlatformDensity,
               textTheme: TextTheme(
                 headline1: TextStyle(
@@ -51,26 +51,27 @@ class Store extends StatelessWidget {
                   fontFamily: "Anton",
                   letterSpacing: 7,
                   fontSize: 50,
-                  color: Color(0xFF383e56),
+                  color: Color(0xFF222831),
                 ),
                 headline2: TextStyle(
                     fontWeight: FontWeight.w900,
-                    color: Color(0xFFfb743e),
-                    fontSize: 40),
+                    color: Color(0xFFf05454),
+                    fontFamily: "Lato",
+                    fontSize: 30),
                 headline3: TextStyle(
-                  fontWeight: FontWeight.w900,
-                  fontSize: 20,
-                  color: Color(0xFF383e56),
-                ),
-                headline4: TextStyle(
                   fontWeight: FontWeight.w900,
                   fontSize: 20,
                   color: Color(0xFFFFFFFF),
                 ),
+                headline4: TextStyle(
+                  fontWeight: FontWeight.w900,
+                  fontSize: 20,
+                  color: Color(0xFF30475e),
+                ),
                 headline5: TextStyle(
                   fontWeight: FontWeight.w900,
                   fontSize: 20,
-                  color: Color(0xFFfb743e),
+                  color: Color(0xFFf05454),
                 ),
               )),
           home: auth.isAuth
@@ -78,7 +79,7 @@ class Store extends StatelessWidget {
               : FutureBuilder(
                   future: auth.autoLogin(),
                   builder: (ctx, AsyncSnapshot snapshot) =>
-                      snapshot.connectionState == ConnectionState.waiting
+                      snapshot.connectionState == ConnectionState.waiting 
                           ? CircularProgressIndicator()
                           : AuthScreen()),
           routes: {

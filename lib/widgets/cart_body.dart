@@ -30,21 +30,21 @@ class CartBody extends StatelessWidget {
               backgroundColor: _theme.accentColor,
               child: Text(
                 "${cart.quantity}x",
-                style: _theme.textTheme.headline3,
+                style: _theme.textTheme.headline3 ,
               ),
             ),
             title: Text(
               cart.title,
-              style: _theme.textTheme.headline3,
+              style: _theme.textTheme.headline4,
             ),
             subtitle: Text(
               "\$" + cart.price.toStringAsFixed(2),
-              style: _theme.textTheme.headline3,
+              style: _theme.textTheme.headline5,
             ),
             trailing: Chip(
               backgroundColor: _theme.accentColor,
               label: Text(
-                "${(cart.price * cart.quantity).toStringAsFixed(2)}",
+                "\$" + (cart.price * cart.quantity).toStringAsFixed(2),
                 style: _theme.textTheme.headline3,
               ),
             ),
@@ -52,14 +52,22 @@ class CartBody extends StatelessWidget {
       onDismissed: (dir) =>
           Provider.of<Cart>(context, listen: false).removeItem(cartId),
       confirmDismiss: (direc) {
-        return showDialog(context: context, builder: (builder) => AlertDialog(
-          title: Text("Are You Sure ? "),
-          content: Text(" You wanna delete this item from card ?"),
-          actions: [
-            TextButton(child: Text("Yes"),onPressed: ()=> Navigator.of(builder).pop(true),),
-            TextButton(child: Text("No"),onPressed: ()=> Navigator.of(builder).pop(false),),
-          ],
-        ));
+        return showDialog(
+            context: context,
+            builder: (builder) => AlertDialog(
+                  title: Text("Are You Sure ? "),
+                  content: Text(" You wanna delete this item from card ?"),
+                  actions: [
+                    TextButton(
+                      child: Text("Yes"),
+                      onPressed: () => Navigator.of(builder).pop(true),
+                    ),
+                    TextButton(
+                      child: Text("No"),
+                      onPressed: () => Navigator.of(builder).pop(false),
+                    ),
+                  ],
+                ));
       },
     );
   }

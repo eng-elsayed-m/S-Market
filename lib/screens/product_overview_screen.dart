@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/providers/products.dart';
 import 'package:shop_app/screens/add_product_screen.dart';
 import '../providers/cart.dart';
 import '../screens/cart_screen.dart';
@@ -17,13 +18,42 @@ class ProductOverviewScreen extends StatefulWidget {
 
 class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
   bool _showFavOnly = false;
+  // bool _init = true;
+  // bool _loading = false;
+  // @override
+  // void initState() {
+  //   super.initState();
+  // }
+
+  // @override
+  // void didChangeDependencies() {
+  //   if (_init) {
+  //     setState(() {
+  //       _loading = true;
+  //     });
+  //     Provider.of<Products>(context, listen: false)
+  //         .fetchProducts()
+  //         .then((value) {
+  //       setState(() {
+  //         _loading = false;
+  //       });
+  //     });
+  //     _init = false;
+  //   }
+  //   super.didChangeDependencies();
+  // }
+
+  Future<void> _refreshProducts() async {
+    await Provider.of<Products>(context, listen: false).fetchProducts();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         primary: true,
-        floatingActionButtonLocation: FloatingActionButtonLocation.miniCenterFloat,
+        floatingActionButtonLocation:
+            FloatingActionButtonLocation.miniCenterFloat,
         floatingActionButton: FloatingActionButton(
-          
           child: Icon(
             Icons.add,
             size: 50,
@@ -31,7 +61,7 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
           ),
           onPressed: () =>
               Navigator.of(context).pushNamed(AddProductScreen.nav),
-              tooltip: "Add new product",
+          tooltip: "Add new product",
         ),
         drawer: AppDrawer(),
         backgroundColor: Theme.of(context).primaryColor.withAlpha(750),
@@ -65,13 +95,29 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
                 onTap: () => Navigator.of(context).pushNamed(CartScreen.nav),
                 child: Icon(
                   Icons.shopping_cart,
-                  color: Colors.white,
+                  color: Color(0xFF30475e),
                   size: 40,
                 ),
               ),
             )
           ],
         ),
-        body: SafeArea(child: ProductsGrid(_showFavOnly)));
+        body: FutureBuilder(
+            future:
+                Provider.of<Products>(context, listen: false).fetchProducts(),
+            builder: (ctx, dataSnapshot) {
+              if (dataSnapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (dataSnapshot.error != null) {
+                return Center(child: Text("an error occurred !",style: Theme.of(context).textTheme.headline3,));
+              } else {
+                return RefreshIndicator(
+                  child: ProductsGrid(_showFavOnly),
+                  onRefresh: () => _refreshProducts(),
+                );
+              }
+            }));
   }
 }

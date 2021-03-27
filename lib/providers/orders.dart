@@ -1,4 +1,7 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
+import 'package:shop_app/models/http_exception.dart';
 import 'package:shop_app/providers/cart.dart';
 
 class OrderItem {
@@ -21,19 +24,74 @@ class Orders with ChangeNotifier {
     return [..._orders];
   }
 
-  void addOrder(List<CartItem> _items, double total) {
+  Future<void> fetchOrders() async {
+    const url = "https://store-50499-default-rtdb.firebaseio.com/orders.json";
+    final res = await http.get(url);
+    final resData = json.decode(res.body) as Map<String, dynamic>;
+    if (resData == null) {
+      return;
+    }
+    List<OrderItem> loadedOrders = [];
+    resData.forEach((id, order) {
+      loadedOrders.insert(
+          0,
+          OrderItem(
+              id: id,
+              amount: order["amount"],
+              products: (order["products"] as List<dynamic>)
+                  .map((item) => CartItem(
+                      id: item["id"],
+                      price: item["price"],
+                      quantity: item["quantity"],
+                      title: item["title"]))
+                  .toList(),
+              dateTime: DateTime.parse(order["dateTime"])));
+    });
+    _orders = loadedOrders;
+    notifyListeners();
+  }
+
+  Future<void> addOrder(List<CartItem> _items, double total) async {
+    const url = "https://store-50499-default-rtdb.firebaseio.com/orders.json";
+    final timestamp = DateTime.now();
+    final res = await http.post(url,
+        body: json.encode({
+          "amount": total,
+          "dateTime": timestamp.toIso8601String(),
+          "products": _items
+              .map((cartProd) => {
+                    "id": cartProd.id,
+                    "title": cartProd.title,
+                    "quantity": cartProd.quantity,
+                    "price": cartProd.price,
+                  })
+              .toList(),
+        }));
     _orders.insert(
         0,
         OrderItem(
             amount: total,
-            id: DateTime.now().toString(),
-            dateTime: DateTime.now(),
+            id: json.decode(res.body)["name"],
+            dateTime: timestamp,
             products: _items));
     notifyListeners();
   }
 
-  void removeItem(String id) {
-    _orders.remove(id);
-    notifyListeners();
+  Future<void> removeItem(String id) async {
+    final url =
+        "https://store-50499-default-rtdb.firebaseio.com/orders/$id.json";
+    final deleteIndex = _orders.indexWhere((order) => order.id == id);
+    OrderItem deletedOrder = _orders[deleteIndex];
+    if (deleteIndex >= 0) {
+      _orders.removeAt(deleteIndex);
+      notifyListeners();
+      final res = await http.delete(url);
+      if (res.statusCode >= 400) {
+        _orders.insert(deleteIndex, deletedOrder);
+        notifyListeners();
+        throw HttpException("couldn't delete product");
+      }
+    }
+    deletedOrder = null;
   }
 }

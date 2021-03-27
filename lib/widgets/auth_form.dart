@@ -21,7 +21,7 @@ class _AuthFormState extends State<AuthForm>
   Animation<double> _doubleAnimation;
   bool _loading = false;
   final _inputDec = InputDecoration(
-    labelStyle: TextStyle(color: Colors.white,fontSize: 18),
+    labelStyle: TextStyle(color: Color(0xFFf05454), fontSize: 18),
   );
 
   @override
@@ -74,7 +74,7 @@ class _AuthFormState extends State<AuthForm>
       }
       _showErrorDialog(errorMessage);
     } catch (e) {
-      const errorMessage = "Couldn't Authenticate you ,please try again later";
+      const errorMessage = "Check your internet connection . then try again";
       _showErrorDialog(errorMessage);
     }
     setState(() {
@@ -86,7 +86,7 @@ class _AuthFormState extends State<AuthForm>
     showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-              title: Text("An error has occurred!"),
+              title: Text("Some thing !"),
               content: Text(errorMessage),
               actions: [
                 TextButton(
@@ -118,7 +118,7 @@ class _AuthFormState extends State<AuthForm>
     return Card(
         color: Theme.of(context).primaryColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        elevation: 8,
+        elevation: 2,
         shadowColor: Theme.of(context).accentColor,
         child: AnimatedContainer(
           height: _authState == AuthState.Signup ? 400 : 325,
@@ -127,7 +127,7 @@ class _AuthFormState extends State<AuthForm>
           constraints: BoxConstraints(
               minHeight: _authState == AuthState.Signup ? 400 : 325),
           width: deviceSize.width * 0.85,
-          padding: EdgeInsets.all(15),
+          padding: EdgeInsets.all(8.0),
           child: Form(
             key: _formKey,
             child: SingleChildScrollView(
@@ -135,7 +135,7 @@ class _AuthFormState extends State<AuthForm>
                 children: [
                   TextFormField(
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white,fontSize: 20),
+                    style: Theme.of(context).textTheme.headline4,
                     decoration: _inputDec.copyWith(labelText: "E-mail"),
                     keyboardType: TextInputType.emailAddress,
                     validator: (email) {
@@ -150,13 +150,13 @@ class _AuthFormState extends State<AuthForm>
                   ),
                   TextFormField(
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white,fontSize: 20),
+                    style: Theme.of(context).textTheme.headline4,
                     decoration: _inputDec.copyWith(labelText: "Password"),
                     obscureText: true,
                     controller: _passwordController,
                     validator: (password) {
                       if (password.isEmpty || password.length < 6) {
-                        return "Password is to short";
+                        return  _authState == AuthState.Signup ?"Password is to short":"Wrong password !!";
                       }
                       return null;
                     },
@@ -174,42 +174,45 @@ class _AuthFormState extends State<AuthForm>
                     child: FadeTransition(
                       opacity: _doubleAnimation,
                       child: SlideTransition(
-                        position: _positionAnimation,
-                        child: TextFormField(
-                          enabled: _authState == AuthState.Signup,
-                         textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white,fontSize: 20),
-                    decoration: _inputDec.copyWith(labelText: "E-mail"),
-                          obscureText: true,
-                          validator: _authState == AuthState.Signup
-                              ? (password) {
-                                  if (password != _passwordController.text) {
-                                    return "Password don't match";
-                                  }
-                                  return null;
-                                }
-                              : null,
-                        ),
-                      ),
+                          position: _positionAnimation,
+                          child: _authState == AuthState.Signup
+                              ? TextFormField(
+                                  enabled: _authState == AuthState.Signup,
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context).textTheme.headline4,
+                                  decoration: _inputDec.copyWith(
+                                      labelText: "Confirm Password"),
+                                  obscureText: true,
+                                  validator: (password) {
+                                    if (password != _passwordController.text) {
+                                      return "Password don't match";
+                                    }
+                                    return null;
+                                  })
+                              : null),
                     ),
                   ),
                   SizedBox(
-                    height: 10,
+                    height: 30,
                   ),
                   _loading
                       ? CircularProgressIndicator()
-                      : TextButton(
+                      : ElevatedButton(
                           child: Text(
                             _authState == AuthState.Signup ? "SignUp" : "LogIn",
-                            style: Theme.of(context).textTheme.headline4,
+                            style: Theme.of(context).textTheme.headline3,
                           ),
                           onPressed: _submit,
-                          
-                          
-                          // shape: RoundedRectangleBorder(
-                          //     borderRadius: BorderRadius.circular(30)),
-                          // padding: EdgeInsets.symmetric(vertical: 10),
-                          // color: Theme.of(context).accentColor,
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(
+                                Theme.of(context).accentColor,
+                              ),
+                              shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30))),
+                              padding: MaterialStateProperty.all(
+                                  EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 30))),
                         ),
                   SizedBox(
                     height: 10,

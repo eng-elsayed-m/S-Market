@@ -13,7 +13,6 @@ class AppDrawer extends StatelessWidget {
       textStyle: MaterialStateProperty.all(
         TextStyle(
             fontSize: 30,
-            color: Colors.white70,
             fontFamily: "Anton",
             letterSpacing: 2),
       ));
@@ -39,7 +38,7 @@ class AppDrawer extends StatelessWidget {
                     ),
                     Text(
                       "Shop",
-                      style: Theme.of(context).textTheme.headline2,
+                      style: Theme.of(context).textTheme.headline4.copyWith(fontSize: 50,letterSpacing: 3),
                     )
                   ],
                 ),
@@ -50,10 +49,10 @@ class AppDrawer extends StatelessWidget {
               TextButton(
                 child: Row(
                   children: [
-                    Icon(Icons.payments,
+                    Icon(Icons.assignment_turned_in,
                         size: 45, color: Theme.of(context).accentColor),
                     SizedBox(width: 30),
-                    Text("Orders"),
+                    Text("Orders",style: Theme.of(context).textTheme.headline2),
                   ],
                 ),
                 onPressed: () =>
@@ -63,10 +62,10 @@ class AppDrawer extends StatelessWidget {
               TextButton(
                 child: Row(
                   children: [
-                    Icon(Icons.drafts,
+                    Icon(Icons.auto_awesome_motion,
                         size: 45, color: Theme.of(context).accentColor),
                     SizedBox(width: 30),
-                    Text("My Products"),
+                    Text("My Products",style: Theme.of(context).textTheme.headline2),
                   ],
                 ),
                 onPressed: () =>
@@ -78,8 +77,9 @@ class AppDrawer extends StatelessWidget {
                 child: IconButton(
                   icon: Icon(
                     Icons.logout,
-                    size: 40,
+                    size: 44,
                     color: Theme.of(context).accentColor,
+
                   ),
                   onPressed: () {
                     Provider.of<Auth>(context, listen: false).logout();

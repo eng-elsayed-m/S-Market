@@ -106,15 +106,15 @@ class Products with ChangeNotifier {
   getData(String uid, String token, List<Product> items) {
     _items = items;
     authToken = token;
-    userId= uid ;
+    userId = uid;
     notifyListeners();
   }
 
   Future<void> fetchProducts([bool filterUser = false]) async {
-    String filteringText =
-        filterUser ? "orderBy = 'creatorID'&equalTo=$userId" : null;
+    // String filteringText =
+    //     filterUser ? "orderBy ='creatorID'&equalTo=$userId" : null;
     String url =
-        "https://store-50499-default-rtdb.firebaseio.com/products.json&$filteringText";
+        "https://store-50499-default-rtdb.firebaseio.com/products.json";
     try {
       final prodRes = await http.get(url);
       final prodResData = json.decode(prodRes.body) as Map<String, dynamic>;
@@ -124,15 +124,15 @@ class Products with ChangeNotifier {
       url =
           "https://store-50499-default-rtdb.firebaseio.com/userFavorite/$userId.json";
       final favRes = await http.get(url);
-      final favResData = json.decode(favRes.body);
+      final favResData = json.decode(favRes.body) as Map<String, dynamic>;
       final List<Product> loadedProducts = [];
       prodResData.forEach((prodId, product) {
         loadedProducts.add(Product(
           id: prodId,
-          title: prodResData["title"],
-          description: prodResData["description"],
-          price: prodResData["price"],
-          imageUrl: prodResData["imageUrl"],
+          title: product["title"],
+          description: product["description"],
+          price: product["price"],
+          imageUrl: product["imageUrl"],
           isFavorite: favResData == null ? false : favResData[prodId] ?? false,
         ));
         _items = loadedProducts;
@@ -144,7 +144,7 @@ class Products with ChangeNotifier {
   }
 
   Future<void> addProduct(Product product) async {
-    var url = "https://store-50499-default-rtdb.firebaseio.com/products.json";
+    const url = "https://store-50499-default-rtdb.firebaseio.com/products.json";
     try {
       final res = await http.post(url,
           body: json.encode({
@@ -169,24 +169,25 @@ class Products with ChangeNotifier {
   }
 
   Future<void> editProduct(String id, Product newProduct) async {
-    final editIndex = _items.indexWhere((prod) => prod.id == newProduct.id);
-    if (editIndex >= 0) {
-      try {
-        final url =
+    final url =
         "https://store-50499-default-rtdb.firebaseio.com/products/$id.json";
-        await http.patch(url,
-            body: json.encode({
-              "title": newProduct.title,
-              "description": newProduct.description,
-              "price": newProduct.price,
-              "imageUrl": newProduct.imageUrl,
-            }));
-        _items[editIndex] = newProduct;
-        notifyListeners();
-      } catch (e) {
-        throw e;
+    final editIndex = _items.indexWhere((prod) => prod.id == newProduct.id);
+    final oldProduct = _items[editIndex];
+    if (editIndex >= 0) {
+      _items[editIndex] = newProduct;
+      final res = await http.patch(url,
+          body: json.encode({
+            "title": newProduct.title,
+            "description": newProduct.description,
+            "price": newProduct.price,
+            "imageUrl": newProduct.imageUrl,
+          }));
+      if (res.statusCode >= 400) {
+        _items[editIndex] = oldProduct;
+        throw HttpException("Item couldn't be edited");
       }
     }
+    notifyListeners();
   }
 
   Future<void> deleteProduct(String id) async {
