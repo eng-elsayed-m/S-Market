@@ -5,8 +5,9 @@ import 'product.dart';
 import 'package:http/http.dart' as http;
 
 class Products with ChangeNotifier {
-  String authToken;
+  final authToken;
   String userId;
+  Products(this.authToken);
 
   List<Product> _items = [
     // Product(
@@ -91,6 +92,7 @@ class Products with ChangeNotifier {
     // ),
   ];
 
+
   List<Product> get items {
     return [..._items];
   }
@@ -103,18 +105,18 @@ class Products with ChangeNotifier {
     return _items.firstWhere((productItem) => productItem.id == id);
   }
 
-  getData(String uid, String token, List<Product> items) {
-    _items = items;
-    authToken = token;
-    userId = uid;
-    notifyListeners();
-  }
+  // getData(String uid, String token, List<Product> items) {
+  //   _items = items;
+  //   authToken = token;
+  //   userId = uid;
+  //   notifyListeners();
+  // }
 
   Future<void> fetchProducts([bool filterUser = false]) async {
     // String filteringText =
     //     filterUser ? "orderBy ='creatorID'&equalTo=$userId" : null;
     String url =
-        "https://store-50499-default-rtdb.firebaseio.com/products.json";
+        "https://store-50499-default-rtdb.firebaseio.com/products.json?auth=$authToken";
     try {
       final prodRes = await http.get(url);
       final prodResData = json.decode(prodRes.body) as Map<String, dynamic>;
@@ -122,7 +124,7 @@ class Products with ChangeNotifier {
         return;
       }
       url =
-          "https://store-50499-default-rtdb.firebaseio.com/userFavorite/$userId.json";
+          "https://store-50499-default-rtdb.firebaseio.com/userFavorite.json";
       final favRes = await http.get(url);
       final favResData = json.decode(favRes.body) as Map<String, dynamic>;
       final List<Product> loadedProducts = [];

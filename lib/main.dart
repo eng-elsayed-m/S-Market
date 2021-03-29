@@ -26,8 +26,11 @@ class Store extends StatelessWidget {
         ChangeNotifierProvider(
           create: (ctx) => Auth(),
         ),
-        ChangeNotifierProvider(
-          create: (ctx) => Products(),
+        ChangeNotifierProxyProvider<Auth , Products>(
+          update: (ctx,auth,previousProducts) => Products(
+            auth.token 
+          ),
+          create: null,
         ),
         ChangeNotifierProvider(
           create: (ctx) => Cart(),
