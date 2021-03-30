@@ -19,13 +19,16 @@ class OrderItem {
 
 class Orders with ChangeNotifier {
   List<OrderItem> _orders = [];
-
+  final authToken;
+  final userId;
+  Orders(this.authToken,this.userId);
   List<OrderItem> get orders {
     return [..._orders];
   }
 
   Future<void> fetchOrders() async {
-    const url = "https://store-50499-default-rtdb.firebaseio.com/orders.json";
+    final url =
+        "https://store-50499-default-rtdb.firebaseio.com/orders/$userId.json?auth=$authToken";
     final res = await http.get(url);
     final resData = json.decode(res.body) as Map<String, dynamic>;
     if (resData == null) {
@@ -52,7 +55,8 @@ class Orders with ChangeNotifier {
   }
 
   Future<void> addOrder(List<CartItem> _items, double total) async {
-    const url = "https://store-50499-default-rtdb.firebaseio.com/orders.json";
+    final url =
+        "https://store-50499-default-rtdb.firebaseio.com/orders/$userId.json?auth=$authToken";
     final timestamp = DateTime.now();
     final res = await http.post(url,
         body: json.encode({
@@ -79,7 +83,7 @@ class Orders with ChangeNotifier {
 
   Future<void> removeItem(String id) async {
     final url =
-        "https://store-50499-default-rtdb.firebaseio.com/orders/$id.json";
+        "https://store-50499-default-rtdb.firebaseio.com/orders/$userId/$id.json?auth=$authToken";
     final deleteIndex = _orders.indexWhere((order) => order.id == id);
     OrderItem deletedOrder = _orders[deleteIndex];
     if (deleteIndex >= 0) {

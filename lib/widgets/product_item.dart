@@ -10,8 +10,7 @@ class ProductItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context);
     final cart = Provider.of<Cart>(context, listen: false);
-    final userId = Provider.of<Auth>(context,listen: false).userId;
-    final token = Provider.of<Auth>(context,listen: false).token;
+    final auth = Provider.of<Auth>(context,listen: false);
     return InkWell(
       onTap: () => Navigator.of(context)
           .pushNamed(ProductDetailScreen.nav, arguments: product.id),
@@ -38,7 +37,7 @@ class ProductItem extends StatelessWidget {
                   size: 30,
                 ),
                 onTap: () {
-                  product.toggleFav(userId,token);
+                  product.toggleFav(auth.userId,auth.token);
                   ScaffoldMessenger.of(context).hideCurrentSnackBar();
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: Text("Added to your favorite !!"),

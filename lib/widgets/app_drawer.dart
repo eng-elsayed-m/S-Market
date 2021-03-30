@@ -49,6 +49,19 @@ class AppDrawer extends StatelessWidget {
               TextButton(
                 child: Row(
                   children: [
+                    Icon(Icons.home,
+                        size: 45, color: Theme.of(context).accentColor),
+                    SizedBox(width: 30),
+                    Text("Home",style: Theme.of(context).textTheme.headline2),
+                  ],
+                ),
+                onPressed: () =>
+                    Navigator.of(context).popAndPushNamed("/"),
+                style: _buttonStyle,
+              ),
+              TextButton(
+                child: Row(
+                  children: [
                     Icon(Icons.assignment_turned_in,
                         size: 45, color: Theme.of(context).accentColor),
                     SizedBox(width: 30),
@@ -69,7 +82,7 @@ class AppDrawer extends StatelessWidget {
                   ],
                 ),
                 onPressed: () =>
-                    Navigator.of(context).pushNamed(UserProductsScreen.nav),
+                    Navigator.of(context).popAndPushNamed(UserProductsScreen.nav),
                 style: _buttonStyle,
               ),
               Spacer(),

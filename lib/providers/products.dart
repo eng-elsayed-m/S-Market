@@ -6,8 +6,8 @@ import 'package:http/http.dart' as http;
 
 class Products with ChangeNotifier {
   final authToken;
-  String userId;
-  Products(this.authToken);
+  final String userId;
+  Products(this.authToken,this.userId);
 
   List<Product> _items = [
     // Product(
@@ -96,6 +96,7 @@ class Products with ChangeNotifier {
   List<Product> get items {
     return [..._items];
   }
+  
 
   List<Product> get favoriteItems {
     return _items.where((productItem) => productItem.isFavorite).toList();
@@ -113,10 +114,10 @@ class Products with ChangeNotifier {
   // }
 
   Future<void> fetchProducts([bool filterUser = false]) async {
-    // String filteringText =
-    //     filterUser ? "orderBy ='creatorID'&equalTo=$userId" : null;
+    String filteringText =
+        filterUser ? 'orderBy="creatorId"&equalTo="$userId"': null;
     String url =
-        "https://store-50499-default-rtdb.firebaseio.com/products.json?auth=$authToken";
+        'https://store-50499-default-rtdb.firebaseio.com/products.json?auth=$authToken&$filteringText';
     try {
       final prodRes = await http.get(url);
       final prodResData = json.decode(prodRes.body) as Map<String, dynamic>;
@@ -124,7 +125,7 @@ class Products with ChangeNotifier {
         return;
       }
       url =
-          "https://store-50499-default-rtdb.firebaseio.com/userFavorite.json";
+          "https://store-50499-default-rtdb.firebaseio.com/userFavorite/$userId.json?auth=$authToken";
       final favRes = await http.get(url);
       final favResData = json.decode(favRes.body) as Map<String, dynamic>;
       final List<Product> loadedProducts = [];
@@ -146,7 +147,7 @@ class Products with ChangeNotifier {
   }
 
   Future<void> addProduct(Product product) async {
-    const url = "https://store-50499-default-rtdb.firebaseio.com/products.json";
+    final url = "https://store-50499-default-rtdb.firebaseio.com/products.json?auth=$authToken";
     try {
       final res = await http.post(url,
           body: json.encode({
@@ -172,7 +173,7 @@ class Products with ChangeNotifier {
 
   Future<void> editProduct(String id, Product newProduct) async {
     final url =
-        "https://store-50499-default-rtdb.firebaseio.com/products/$id.json";
+        "https://store-50499-default-rtdb.firebaseio.com/products/$id.json?auth=$authToken";
     final editIndex = _items.indexWhere((prod) => prod.id == newProduct.id);
     final oldProduct = _items[editIndex];
     if (editIndex >= 0) {
@@ -194,7 +195,7 @@ class Products with ChangeNotifier {
 
   Future<void> deleteProduct(String id) async {
     final url =
-        "https://store-50499-default-rtdb.firebaseio.com/products/$id.json";
+        "https://store-50499-default-rtdb.firebaseio.com/products/$id.json?auth=$authToken";
     final deleteIndex = _items.indexWhere((prod) => prod.id == id);
     var deletedProd = _items[deleteIndex];
     if (deleteIndex >= 0) {
