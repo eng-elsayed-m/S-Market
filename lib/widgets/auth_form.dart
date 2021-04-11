@@ -19,6 +19,7 @@ class _AuthFormState extends State<AuthForm>
   AnimationController _controller;
   Animation<Offset> _positionAnimation;
   Animation<double> _doubleAnimation;
+  Animation<Size> _sizeAnimation;
   bool _loading = false;
   final _inputDec = InputDecoration(
     labelStyle: TextStyle(color: Color(0xFFf05454), fontSize: 18),
@@ -28,12 +29,18 @@ class _AuthFormState extends State<AuthForm>
   void initState() {
     super.initState();
     _controller =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+        AnimationController(vsync: this, duration: Duration(milliseconds: 200));
     _positionAnimation = Tween<Offset>(
             begin: Offset(0, -0.15), end: Offset(0, 0))
         .animate(CurvedAnimation(curve: Curves.easeInOut, parent: _controller));
-    _doubleAnimation = Tween<double>(begin: 0, end: 0.9)
+    _doubleAnimation = Tween<double>(begin: 0.1, end: 0.9)
         .animate(CurvedAnimation(curve: Curves.easeIn, parent: _controller));
+    _sizeAnimation = Tween<Size>(
+            begin: Size(double.infinity, 350), end: Size(double.infinity, 410))
+        .animate(CurvedAnimation(curve: Curves.easeIn, parent: _controller));
+    _controller.addListener(() {
+      setState(() {});
+    });
   }
 
   @override
@@ -121,11 +128,10 @@ class _AuthFormState extends State<AuthForm>
         elevation: 2,
         shadowColor: Theme.of(context).accentColor,
         child: AnimatedContainer(
-          height: _authState == AuthState.Signup ? 400 : 325,
+          height: _sizeAnimation.value.height,
           curve: Curves.easeIn,
           duration: Duration(milliseconds: 300),
-          constraints: BoxConstraints(
-              minHeight: _authState == AuthState.Signup ? 400 : 325),
+          constraints: BoxConstraints(minHeight: _sizeAnimation.value.height),
           width: deviceSize.width * 0.85,
           padding: EdgeInsets.all(8.0),
           child: Form(
@@ -149,6 +155,7 @@ class _AuthFormState extends State<AuthForm>
                     },
                   ),
                   TextFormField(
+                    expands: false,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.headline4,
                     decoration: _inputDec.copyWith(labelText: "Password"),
@@ -156,7 +163,9 @@ class _AuthFormState extends State<AuthForm>
                     controller: _passwordController,
                     validator: (password) {
                       if (password.isEmpty || password.length < 6) {
-                        return  _authState == AuthState.Signup ?"Password is to short":"Wrong password !!";
+                        return _authState == AuthState.Signup
+                            ? "Password is to short"
+                            : "Wrong password !!";
                       }
                       return null;
                     },

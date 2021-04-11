@@ -10,16 +10,20 @@ class ProductItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context);
     final cart = Provider.of<Cart>(context, listen: false);
-    final auth = Provider.of<Auth>(context,listen: false);
+    final auth = Provider.of<Auth>(context, listen: false);
     return InkWell(
       onTap: () => Navigator.of(context)
           .pushNamed(ProductDetailScreen.nav, arguments: product.id),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(15),
         child: GridTile(
-          child: Image.network(
-            product.imageUrl,
-            fit: BoxFit.cover,
+          child: Hero(
+            tag: product.id,
+            child: FadeInImage(
+              placeholder: AssetImage('assets/images/holder.png'),
+              image: NetworkImage(product.imageUrl),
+              fit: BoxFit.cover,
+            ),
           ),
           footer: GridTileBar(
               backgroundColor: Colors.white60,
@@ -37,7 +41,7 @@ class ProductItem extends StatelessWidget {
                   size: 30,
                 ),
                 onTap: () {
-                  product.toggleFav(auth.userId,auth.token);
+                  product.toggleFav(auth.userId, auth.token);
                   ScaffoldMessenger.of(context).hideCurrentSnackBar();
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: Text("Added to your favorite !!"),

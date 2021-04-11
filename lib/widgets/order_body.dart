@@ -50,64 +50,73 @@ class _OrderBodyState extends State<OrderBody> {
           print(e);
         }
       },
-      child: Card(
-        margin: EdgeInsets.symmetric(vertical: 10, horizontal: 2),
-        child: Column(
-          children: [
-            ListTile(
-              tileColor: Theme.of(context).accentColor,
-              title: Text(
-                "Order value : \$${widget.order.amount.toStringAsFixed(2)}",
-                style: Theme.of(context).textTheme.headline4,
-              ),
-              subtitle: Text(
-                DateFormat("dd / MM / yyyy a hh:mm")
-                    .format(widget.order.dateTime),
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700),
-              ),
-              trailing: IconButton(
-                icon: Icon(
-                  _expanded ? Icons.expand_less : Icons.expand_more,
-                  color: Theme.of(context).primaryColor,
-                  size: 40,
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 300),
+        height: _expanded
+            ? min(widget.order.products.length * 20.0 + 110, 200)
+            : 95,
+        child: Card(
+          margin: EdgeInsets.symmetric(vertical: 10, horizontal: 2),
+          child: Column(
+            children: [
+              ListTile(
+                title: Text(
+                  "Order value : \$${widget.order.amount.toStringAsFixed(2)}",
+                  style: Theme.of(context).textTheme.headline5,
                 ),
-                onPressed: () {
-                  setState(() {
-                    _expanded = !_expanded;
-                  });
-                },
+                subtitle: Text(
+                  DateFormat("dd / MM / yyyy a hh:mm")
+                      .format(widget.order.dateTime),
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700),
+                ),
+                trailing: IconButton(
+                  icon: Icon(
+                    _expanded ? Icons.expand_less : Icons.expand_more,
+                    color: Theme.of(context).accentColor,
+                    size: 40,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _expanded = !_expanded;
+                    });
+                  },
+                ),
               ),
-            ),
-            if (_expanded)
               Container(
-                color: Theme.of(context).primaryColor,
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                height: min(widget.order.products.length * 20.0 + 10, 100),
-                child: ListView(
-                  children: widget.order.products
-                      .map((item) => Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                item.title,
-                                style: Theme.of(context).textTheme.headline4,
-                              ),
-                              Text(
-                                "\$${item.price}${item.quantity}x",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline5
-                                    .copyWith(fontSize: 18),
-                              ),
-                            ],
-                          ))
-                      .toList(),
+                margin: EdgeInsets.symmetric(horizontal: 15),
+                child: AnimatedContainer(
+                  duration: Duration(milliseconds: 300),
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  height: _expanded
+                      ? min(widget.order.products.length * 20.0 + 10, 100)
+                      : 0,
+                  child: ListView(
+                    children: widget.order.products
+                        .map((item) => Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  item.title,
+                                  style: Theme.of(context).textTheme.headline4,
+                                ),
+                                Text(
+                                  "\$${item.price}${item.quantity}x",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline5
+                                      .copyWith(fontSize: 18),
+                                ),
+                              ],
+                            ))
+                        .toList(),
+                  ),
                 ),
               ),
-          ],
+            ],
+          ),
         ),
       ),
     );
