@@ -85,34 +85,31 @@ class _OrderBodyState extends State<OrderBody> {
                   },
                 ),
               ),
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 15),
-                child: AnimatedContainer(
-                  duration: Duration(milliseconds: 300),
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  height: _expanded
-                      ? min(widget.order.products.length * 20.0 + 10, 100)
-                      : 0,
-                  child: ListView(
-                    children: widget.order.products
-                        .map((item) => Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  item.title,
-                                  style: Theme.of(context).textTheme.headline4,
-                                ),
-                                Text(
-                                  "\$${item.price}${item.quantity}x",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headline5
-                                      .copyWith(fontSize: 18),
-                                ),
-                              ],
-                            ))
-                        .toList(),
-                  ),
+              AnimatedContainer(
+                duration: Duration(milliseconds: 300),
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                height: _expanded
+                    ? min(widget.order.products.length * 20.0 + 10, 100)
+                    : 0,
+                child: ListView(
+                  children: widget.order.products
+                      .map((item) => Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                item.title,
+                                style: Theme.of(context).textTheme.headline4,
+                              ),
+                              Text(
+                                "\$${item.price}${item.quantity}x",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline5
+                                    .copyWith(fontSize: 18),
+                              ),
+                            ],
+                          ))
+                      .toList(),
                 ),
               ),
             ],
