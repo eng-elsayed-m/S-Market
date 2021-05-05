@@ -23,6 +23,7 @@ class CartBody extends StatelessWidget {
         alignment: Alignment.centerRight,
       ),
       child: Card(
+          color: Color(0xFF30475e),
           elevation: 5,
           margin: EdgeInsets.all(10),
           child: ListTile(
@@ -30,7 +31,7 @@ class CartBody extends StatelessWidget {
               backgroundColor: _theme.accentColor,
               child: Text(
                 "${cart.quantity}x",
-                style: _theme.textTheme.headline3 ,
+                style: _theme.textTheme.headline3,
               ),
             ),
             title: Text(

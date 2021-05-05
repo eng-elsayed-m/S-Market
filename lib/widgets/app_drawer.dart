@@ -11,10 +11,7 @@ class AppDrawer extends StatelessWidget {
       foregroundColor: MaterialStateProperty.all(Colors.white70),
       minimumSize: MaterialStateProperty.all(Size(double.infinity, 30)),
       textStyle: MaterialStateProperty.all(
-        TextStyle(
-            fontSize: 30,
-            fontFamily: "Anton",
-            letterSpacing: 2),
+        TextStyle(fontSize: 30, fontFamily: "Anton", letterSpacing: 2),
       ));
   @override
   Widget build(BuildContext context) {
@@ -31,20 +28,24 @@ class AppDrawer extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 child: Row(
                   children: [
-                    Icon(
-                      Icons.shopping_bag_outlined,
-                      size: 70,
-                      color: Theme.of(context).accentColor,
+                    Image.asset(
+                      "assets/images/s_market.png",
+                      height: 100,
                     ),
-                    Text(
-                      "Shop",
-                      style: Theme.of(context).textTheme.headline4.copyWith(fontSize: 50,letterSpacing: 3),
+                    Flexible(
+                      child: Text(
+                        "S-Market",
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline4
+                            .copyWith(fontSize: 27, letterSpacing: 4),
+                      ),
                     )
                   ],
                 ),
               ),
               Divider(
-                color: Colors.white70,
+                color: Colors.red,
               ),
               TextButton(
                 child: Row(
@@ -52,11 +53,10 @@ class AppDrawer extends StatelessWidget {
                     Icon(Icons.home,
                         size: 45, color: Theme.of(context).accentColor),
                     SizedBox(width: 30),
-                    Text("Home",style: Theme.of(context).textTheme.headline2),
+                    Text("Home", style: Theme.of(context).textTheme.headline2),
                   ],
                 ),
-                onPressed: () =>
-                    Navigator.of(context).popAndPushNamed("/"),
+                onPressed: () => Navigator.of(context).popAndPushNamed("/"),
                 style: _buttonStyle,
               ),
               TextButton(
@@ -65,7 +65,8 @@ class AppDrawer extends StatelessWidget {
                     Icon(Icons.assignment_turned_in,
                         size: 45, color: Theme.of(context).accentColor),
                     SizedBox(width: 30),
-                    Text("Orders",style: Theme.of(context).textTheme.headline2),
+                    Text("Orders",
+                        style: Theme.of(context).textTheme.headline2),
                   ],
                 ),
                 onPressed: () =>
@@ -78,11 +79,12 @@ class AppDrawer extends StatelessWidget {
                     Icon(Icons.auto_awesome_motion,
                         size: 45, color: Theme.of(context).accentColor),
                     SizedBox(width: 30),
-                    Text("My Products",style: Theme.of(context).textTheme.headline2),
+                    Text("My Products",
+                        style: Theme.of(context).textTheme.headline2),
                   ],
                 ),
-                onPressed: () =>
-                    Navigator.of(context).popAndPushNamed(UserProductsScreen.nav),
+                onPressed: () => Navigator.of(context)
+                    .popAndPushNamed(UserProductsScreen.nav),
                 style: _buttonStyle,
               ),
               Spacer(),
@@ -91,8 +93,7 @@ class AppDrawer extends StatelessWidget {
                   icon: Icon(
                     Icons.logout,
                     size: 44,
-                    color: Theme.of(context).accentColor,
-
+                    color: Color(0xFFdddddd),
                   ),
                   onPressed: () {
                     Provider.of<Auth>(context, listen: false).logout();

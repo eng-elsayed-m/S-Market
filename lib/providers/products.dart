@@ -30,7 +30,7 @@ class Products with ChangeNotifier {
   //   notifyListeners();
   // }
 
-  Future<void> fetchProducts([bool filterUser = false]) async {
+  Future<void> fetchProducts(bool filterUser) async {
     String filteringText =
         filterUser ? 'orderBy="creatorId"&equalTo="$userId"' : null;
     String url =
@@ -112,16 +112,20 @@ class Products with ChangeNotifier {
   }
 
   Future<void> deleteProduct(String id) async {
-    final url =
+    final url1 =
         "https://store-50499-default-rtdb.firebaseio.com/products/$id.json?auth=$authToken";
+    final url2 =
+        "https://store-50499-default-rtdb.firebaseio.com/userFavorite/$userId/$id.json?auth=$authToken";
     final deleteIndex = _items.indexWhere((prod) => prod.id == id);
     var deletedProd = _items[deleteIndex];
     if (deleteIndex >= 0) {
       _items.removeAt(deleteIndex);
       notifyListeners();
 
-      final res = await http.delete(url);
-      if (res.statusCode >= 400) {
+      final res2 = await http.delete(url1).then((value) {
+        http.delete(url2);
+      });
+      if (res2.statusCode >= 400) {
         _items.insert(deleteIndex, deletedProd);
         notifyListeners();
         throw HttpException("couldn't delete product");

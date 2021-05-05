@@ -56,13 +56,14 @@ class _OrderBodyState extends State<OrderBody> {
             ? min(widget.order.products.length * 20.0 + 110, 200)
             : 95,
         child: Card(
+          color: Color(0xFF30475e),
           margin: EdgeInsets.symmetric(vertical: 10, horizontal: 2),
           child: Column(
             children: [
               ListTile(
                 title: Text(
                   "Order value : \$${widget.order.amount.toStringAsFixed(2)}",
-                  style: Theme.of(context).textTheme.headline5,
+                  style: Theme.of(context).textTheme.headline4,
                 ),
                 subtitle: Text(
                   DateFormat("dd / MM / yyyy a hh:mm")
@@ -98,7 +99,7 @@ class _OrderBodyState extends State<OrderBody> {
                             children: [
                               Text(
                                 item.title,
-                                style: Theme.of(context).textTheme.headline4,
+                                style: Theme.of(context).textTheme.headline5,
                               ),
                               Text(
                                 "\$${item.price}${item.quantity}x",

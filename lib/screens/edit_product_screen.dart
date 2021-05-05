@@ -17,8 +17,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
   final _imageUrlFocusNode = FocusNode();
   final _imageUrlController = TextEditingController();
   final _inputDec = InputDecoration(
-    labelStyle: TextStyle(color: Color(0xFFf05454), fontSize: 30),
-  );
+      contentPadding: EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 20.0),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
+      focusColor: Color(0xFFf05454),
+      fillColor: Color(0xFF30475e),
+      filled: true,
+      labelStyle: TextStyle(color: Color(0xFFf05454)));
   String _title = "";
   String _description = "";
   String _price = "";
@@ -65,6 +69,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     final id = ModalRoute.of(context).settings.arguments;
     final product = Provider.of<Products>(context).searchItem(id);
     return Scaffold(
+        backgroundColor: Theme.of(context).primaryColor,
         appBar: AppBar(
           title:
               Text("Edit Prouct", style: Theme.of(context).textTheme.headline2),
@@ -117,116 +122,160 @@ class _EditProductScreenState extends State<EditProductScreen> {
         ),
         body: _loading
             ? Center(child: CircularProgressIndicator())
-            : Padding(
-                padding: const EdgeInsets.symmetric(
-                    vertical: 20.0, horizontal: 10.0),
-                child: Form(
-                  key: _formKey,
-                  child: ListView(
-                    children: [
-                      TextFormField(
-                        decoration: _inputDec.copyWith(
-                          labelText: "Title ",
-                        ),
-                        style: Theme.of(context).textTheme.headline4,
-                        initialValue: product.title,
-                        textInputAction: TextInputAction.next,
-                        onFieldSubmitted: (_) =>
-                            FocusScope.of(context).requestFocus(_priceNode),
-                        onSaved: (val) {
-                          _title = val;
-                        },
-                        validator: (text) {
-                          if (text.isEmpty) {
-                            return "Tile is empty";
-                          }
-                          return null;
-                        },
-                      ),
-                      TextFormField(
-                        decoration: _inputDec.copyWith(
-                          labelText: "Price ",
-                        ),
-                        style: Theme.of(context).textTheme.headline4,
-                        initialValue: product.price.toString(),
-                        textInputAction: TextInputAction.next,
-                        keyboardType: TextInputType.number,
-                        focusNode: _priceNode,
-                        onFieldSubmitted: (_) => FocusScope.of(context)
-                            .requestFocus(_descriptionNode),
-                        onSaved: (val) {
-                          _price = val;
-                        },
-                        validator: (text) {
-                          if (text.isEmpty) {
-                            return "Price is empty";
-                          }
-                          if (double.tryParse(text) == null) {
-                            return "Please enter valid value";
-                          }
-                          if (double.parse(text) <= 0) {
-                            return "price can't be smaller or equal zero ,bitch !";
-                          }
-                          return null;
-                        },
-                      ),
-                      TextFormField(
-                        decoration: _inputDec.copyWith(
-                          labelText: "Description ",
-                        ),
-                        style: Theme.of(context).textTheme.headline4,
-                        initialValue: product.description,
-                        keyboardType: TextInputType.multiline,
-                        focusNode: _descriptionNode,
-                        onSaved: (val) {
-                          _description = val;
-                        },
-                        validator: (text) {
-                          if (text.isEmpty) {
-                            return "Description is empty";
-                          }
-                          if (text.length < 10) {
-                            return "can't be less than 10 character";
-                          }
-                          return null;
-                        },
-                        maxLines: 3,
-                      ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Container(
-                            width: 100,
-                            height: 100,
-                            margin: EdgeInsets.only(top: 10, right: 10),
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                                    color: Colors.red,
-                                    width: 1,
-                                    style: BorderStyle.solid)),
-                            child: FittedBox(
-                                child: Image.network(
-                              _imageUrlController.text.isEmpty
-                                  ? product.imageUrl
-                                  : _imageUrlController.text,
-                            )),
-                          ),
-                          Expanded(
-                            child: TextFormField(
-                              decoration: _inputDec.copyWith(
-                                  labelText:
-                                      "if empty or invalid image won't change ",
-                                  labelStyle:
-                                      Theme.of(context).textTheme.headline5),
-                              style: Theme.of(context).textTheme.headline4,
-                              keyboardType: TextInputType.url,
-                              focusNode: _imageUrlFocusNode,
-                              controller: _imageUrlController,
+            : Container(
+                height: MediaQuery.of(context).size.height,
+                child: SingleChildScrollView(
+                  primary: true,
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        Stack(
+                          children: [
+                            Container(
+                              height: 250,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: Colors.red,
+                                      width: 1,
+                                      style: BorderStyle.solid)),
+                              child: product.imageUrl.isEmpty
+                                  ? CircularProgressIndicator()
+                                  : FittedBox(
+                                      child: Image.network(
+                                      _imageUrlController.text.isEmpty
+                                          ? product.imageUrl
+                                          : _imageUrlController.text,
+                                      fit: BoxFit.contain,
+                                    )),
                             ),
+                            Positioned(
+                              child: IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(
+                                    Icons.camera,
+                                    color: Theme.of(context).accentColor,
+                                    size: 40,
+                                  )),
+                              bottom: 20,
+                              right: 20,
+                            )
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 20),
+                          child: Column(
+                            children: [
+                              TextFormField(
+                                decoration: _inputDec.copyWith(
+                                  labelText: "Title ",
+                                ),
+                                style: Theme.of(context).textTheme.headline4,
+                                initialValue: product.title,
+                                textInputAction: TextInputAction.next,
+                                onFieldSubmitted: (_) => FocusScope.of(context)
+                                    .requestFocus(_priceNode),
+                                onSaved: (val) {
+                                  _title = val;
+                                },
+                                validator: (text) {
+                                  if (text.isEmpty) {
+                                    return "Tile is empty";
+                                  }
+                                  return null;
+                                },
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              TextFormField(
+                                decoration: _inputDec.copyWith(
+                                  labelText: "Price ",
+                                ),
+                                style: Theme.of(context).textTheme.headline4,
+                                initialValue: product.price.toString(),
+                                textInputAction: TextInputAction.next,
+                                keyboardType: TextInputType.number,
+                                focusNode: _priceNode,
+                                onFieldSubmitted: (_) => FocusScope.of(context)
+                                    .requestFocus(_descriptionNode),
+                                onSaved: (val) {
+                                  _price = val;
+                                },
+                                validator: (text) {
+                                  if (text.isEmpty) {
+                                    return "Price is empty";
+                                  }
+                                  if (double.tryParse(text) == null) {
+                                    return "Please enter valid value";
+                                  }
+                                  if (double.parse(text) <= 0) {
+                                    return "price can't be smaller or equal zero ,bitch !";
+                                  }
+                                  return null;
+                                },
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              TextFormField(
+                                decoration: _inputDec.copyWith(
+                                  labelText: "Description ",
+                                ),
+                                style: Theme.of(context).textTheme.headline4,
+                                initialValue: product.description,
+                                keyboardType: TextInputType.multiline,
+                                focusNode: _descriptionNode,
+                                onSaved: (val) {
+                                  _description = val;
+                                },
+                                validator: (text) {
+                                  if (text.isEmpty) {
+                                    return "Description is empty";
+                                  }
+                                  if (text.length < 10) {
+                                    return "can't be less than 10 character";
+                                  }
+                                  return null;
+                                },
+                                maxLines: 3,
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ],
+                        )
+                        // Row(
+                        //   crossAxisAlignment: CrossAxisAlignment.end,
+                        //   children: [
+                        //     Container(
+                        //       width: 100,
+                        //       height: 100,
+                        //       margin: EdgeInsets.only(top: 10, right: 10),
+                        //       decoration: BoxDecoration(
+                        //           border: Border.all(
+                        //               color: Colors.red,
+                        //               width: 1,
+                        //               style: BorderStyle.solid)),
+                        //       child:
+                        //     ),
+                        //     Expanded(
+                        //       child: TextFormField(
+                        //         decoration: _inputDec.copyWith(
+                        //             labelText:
+                        //                 "if empty or invalid image won't change ",
+                        //             labelStyle:
+                        //                 Theme.of(context).textTheme.headline5),
+                        //         style: Theme.of(context).textTheme.headline4,
+                        //         keyboardType: TextInputType.url,
+                        //         focusNode: _imageUrlFocusNode,
+                        //         controller: _imageUrlController,
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
+                      ],
+                    ),
                   ),
                 ),
               ));

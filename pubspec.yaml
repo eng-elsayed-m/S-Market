@@ -21,6 +21,8 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/holder.png
+    - assets/images/s_market.png
+
 
   fonts:
     - family: Lato

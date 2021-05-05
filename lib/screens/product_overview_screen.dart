@@ -44,7 +44,7 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
   // }
 
   Future<void> _refreshProducts() async {
-    await Provider.of<Products>(context, listen: false).fetchProducts();
+    await Provider.of<Products>(context, listen: false).fetchProducts(false);
   }
 
   @override
@@ -53,15 +53,25 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
         primary: true,
         floatingActionButtonLocation:
             FloatingActionButtonLocation.miniCenterFloat,
-        floatingActionButton: FloatingActionButton(
-          child: Icon(
-            Icons.add,
-            size: 50,
-            color: Theme.of(context).primaryColor,
+        floatingActionButton: InkWell(
+          onTap: () => Navigator.of(context).pushNamed(AddProductScreen.nav),
+          child: Stack(
+            children: [
+              Image.asset(
+                "assets/images/s_market.png",
+                height: 40,
+              ),
+              Positioned(
+                top: -10,
+                right: -10,
+                child: Icon(
+                  Icons.add,
+                  size: 40,
+                  color: Color(0xFFdddddd),
+                ),
+              ),
+            ],
           ),
-          onPressed: () =>
-              Navigator.of(context).pushNamed(AddProductScreen.nav),
-          tooltip: "Add new product",
         ),
         drawer: AppDrawer(),
         backgroundColor: Theme.of(context).primaryColor.withAlpha(750),
@@ -69,7 +79,7 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
           iconTheme:
               IconThemeData(color: Theme.of(context).accentColor, size: 60.0),
           title: Text(
-            _showFavOnly ? "Favorite" : "Shop",
+            _showFavOnly ? "Favorite" : "S-Market",
             style: Theme.of(context).textTheme.headline4.copyWith(fontSize: 40),
           ),
           actions: <Widget>[
@@ -95,7 +105,7 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
                 onTap: () => Navigator.of(context).pushNamed(CartScreen.nav),
                 child: Icon(
                   Icons.shopping_cart,
-                  color: Color(0xFF30475e),
+                  color: Color(0xFFdddddd),
                   size: 40,
                 ),
               ),
@@ -103,15 +113,19 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
           ],
         ),
         body: FutureBuilder(
-            future:
-                Provider.of<Products>(context, listen: false).fetchProducts(),
+            future: Provider.of<Products>(context, listen: false)
+                .fetchProducts(false),
             builder: (ctx, dataSnapshot) {
               if (dataSnapshot.connectionState == ConnectionState.waiting) {
                 return Center(
                   child: CircularProgressIndicator(),
                 );
               } else if (dataSnapshot.error != null) {
-                return Center(child: Text("an error occurred !",style: Theme.of(context).textTheme.headline3,));
+                return Center(
+                    child: Text(
+                  "an error occurred !",
+                  style: Theme.of(context).textTheme.headline3,
+                ));
               } else {
                 return RefreshIndicator(
                   child: ProductsGrid(_showFavOnly),

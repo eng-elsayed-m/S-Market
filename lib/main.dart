@@ -26,23 +26,19 @@ class Store extends StatelessWidget {
         ChangeNotifierProvider(
           create: (ctx) => Auth(),
         ),
-        ChangeNotifierProxyProvider<Auth , Products>(
-          update: (ctx,auth,previousProducts) => Products(
-            auth.token ,
-            auth.userId
-          ),
+        ChangeNotifierProxyProvider<Auth, Products>(
+          update: (ctx, auth, previousProducts) =>
+              Products(auth.token, auth.userId),
           create: null,
         ),
         ChangeNotifierProvider(
           create: (ctx) => Cart(),
         ),
-        ChangeNotifierProxyProvider<Auth , Orders>(
-          update: (ctx,auth,previousProducts) => Orders(
-            auth.token ,
-            auth.userId
-          ),create: null,
-          
-          ),
+        ChangeNotifierProxyProvider<Auth, Orders>(
+          update: (ctx, auth, previousProducts) =>
+              Orders(auth.token, auth.userId),
+          create: null,
+        ),
       ],
       child: Consumer<Auth>(
         builder: (ctx, auth, _) => MaterialApp(
@@ -50,7 +46,7 @@ class Store extends StatelessWidget {
           title: 'ShopApp',
           theme: ThemeData(
               fontFamily: "Lato ",
-              primaryColor: Color(0xFFdddddd)  ,
+              primaryColor: Color(0xFF222831),
               accentColor: Color(0xFFf05454),
               visualDensity: VisualDensity.adaptivePlatformDensity,
               textTheme: TextTheme(
@@ -59,22 +55,22 @@ class Store extends StatelessWidget {
                   fontFamily: "Anton",
                   letterSpacing: 7,
                   fontSize: 50,
-                  color: Color(0xFF222831),
+                  color: Color(0xFFdddddd),
                 ),
                 headline2: TextStyle(
                     fontWeight: FontWeight.w900,
-                    color: Color(0xFFf05454),
+                    color: Color(0xFFdddddd),
                     fontFamily: "Lato",
                     fontSize: 30),
                 headline3: TextStyle(
                   fontWeight: FontWeight.w900,
                   fontSize: 20,
-                  color: Color(0xFFFFFFFF),
+                  color: Color(0xFF30475e),
                 ),
                 headline4: TextStyle(
                   fontWeight: FontWeight.w900,
                   fontSize: 20,
-                  color: Color(0xFF30475e),
+                  color: Color(0xFFdddddd),
                 ),
                 headline5: TextStyle(
                   fontWeight: FontWeight.w900,
@@ -87,7 +83,7 @@ class Store extends StatelessWidget {
               : FutureBuilder(
                   future: auth.autoLogin(),
                   builder: (ctx, AsyncSnapshot snapshot) =>
-                      snapshot.connectionState == ConnectionState.waiting 
+                      snapshot.connectionState == ConnectionState.waiting
                           ? CircularProgressIndicator()
                           : AuthScreen()),
           routes: {

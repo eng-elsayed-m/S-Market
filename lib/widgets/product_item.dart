@@ -29,7 +29,7 @@ class ProductItem extends StatelessWidget {
               backgroundColor: Colors.white60,
               title: Text(
                 product.title,
-                style: Theme.of(context).textTheme.headline4,
+                style: Theme.of(context).textTheme.headline3,
                 textAlign: TextAlign.center,
               ),
               leading: InkWell(

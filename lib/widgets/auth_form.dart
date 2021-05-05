@@ -22,8 +22,12 @@ class _AuthFormState extends State<AuthForm>
   Animation<Size> _sizeAnimation;
   bool _loading = false;
   final _inputDec = InputDecoration(
-    labelStyle: TextStyle(color: Color(0xFFf05454), fontSize: 18),
+    contentPadding: EdgeInsets.fromLTRB(10.0, 15.0, 10.0, 10.0),
+    border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
   );
+  // final _inputDec = InputDecoration(
+  //   labelStyle: TextStyle(color: Color(0xFF30475e), fontSize: 18),
+  // );
 
   @override
   void initState() {
@@ -36,7 +40,7 @@ class _AuthFormState extends State<AuthForm>
     _doubleAnimation = Tween<double>(begin: 0.1, end: 0.9)
         .animate(CurvedAnimation(curve: Curves.easeIn, parent: _controller));
     _sizeAnimation = Tween<Size>(
-            begin: Size(double.infinity, 350), end: Size(double.infinity, 410))
+            begin: Size(double.infinity, 300), end: Size(double.infinity, 360))
         .animate(CurvedAnimation(curve: Curves.easeIn, parent: _controller));
     _controller.addListener(() {
       setState(() {});
@@ -123,25 +127,31 @@ class _AuthFormState extends State<AuthForm>
     final deviceSize = MediaQuery.of(context).size;
 
     return Card(
-        color: Theme.of(context).primaryColor,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        elevation: 2,
-        shadowColor: Theme.of(context).accentColor,
+        color: Color(0xFFdddddd),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30),
+        ),
+        elevation: 12,
+        shadowColor: Colors.white,
         child: AnimatedContainer(
           height: _sizeAnimation.value.height,
           curve: Curves.easeIn,
           duration: Duration(milliseconds: 300),
           constraints: BoxConstraints(minHeight: _sizeAnimation.value.height),
           width: deviceSize.width * 0.85,
-          padding: EdgeInsets.all(8.0),
+          padding: EdgeInsets.symmetric(vertical: 0, horizontal: 20),
           child: Form(
             key: _formKey,
             child: SingleChildScrollView(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
+                  SizedBox(
+                    height: 20,
+                  ),
                   TextFormField(
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.headline4,
+                    style: Theme.of(context).textTheme.headline3,
                     decoration: _inputDec.copyWith(labelText: "E-mail"),
                     keyboardType: TextInputType.emailAddress,
                     validator: (email) {
@@ -154,10 +164,13 @@ class _AuthFormState extends State<AuthForm>
                       _authData['email'] = val;
                     },
                   ),
+                  SizedBox(
+                    height: 20,
+                  ),
                   TextFormField(
                     expands: false,
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.headline4,
+                    style: Theme.of(context).textTheme.headline3,
                     decoration: _inputDec.copyWith(labelText: "Password"),
                     obscureText: true,
                     controller: _passwordController,
@@ -172,6 +185,9 @@ class _AuthFormState extends State<AuthForm>
                     onSaved: (password) {
                       _authData['password'] = password;
                     },
+                  ),
+                  SizedBox(
+                    height: 20,
                   ),
                   AnimatedContainer(
                     curve: Curves.easeIn,
@@ -188,7 +204,7 @@ class _AuthFormState extends State<AuthForm>
                               ? TextFormField(
                                   enabled: _authState == AuthState.Signup,
                                   textAlign: TextAlign.center,
-                                  style: Theme.of(context).textTheme.headline4,
+                                  style: Theme.of(context).textTheme.headline3,
                                   decoration: _inputDec.copyWith(
                                       labelText: "Confirm Password"),
                                   obscureText: true,
@@ -202,14 +218,14 @@ class _AuthFormState extends State<AuthForm>
                     ),
                   ),
                   SizedBox(
-                    height: 30,
+                    height: 20,
                   ),
                   _loading
                       ? CircularProgressIndicator()
                       : ElevatedButton(
                           child: Text(
                             _authState == AuthState.Signup ? "SignUp" : "LogIn",
-                            style: Theme.of(context).textTheme.headline3,
+                            style: Theme.of(context).textTheme.headline4,
                           ),
                           onPressed: _submit,
                           style: ButtonStyle(
@@ -224,12 +240,12 @@ class _AuthFormState extends State<AuthForm>
                                       vertical: 10, horizontal: 30))),
                         ),
                   SizedBox(
-                    height: 10,
+                    height: 20,
                   ),
                   TextButton(
                     child: Text(
                       "${_authState == AuthState.Signup ? "LogIn" : "SignUp"} instead",
-                      style: Theme.of(context).textTheme.headline4,
+                      style: Theme.of(context).textTheme.headline5,
                     ),
                     onPressed: _switchAuth,
                   )
